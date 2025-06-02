@@ -62,6 +62,7 @@ void simpanDataKeFile() {
 }
 
 void bacaDataDariFile() {
+    jumlahpelanggan = 0;
     ifstream file("bioskop.txt");
     if (!file) {
         cout << "Gagal membuka file atau file belum ada!" << endl;
@@ -478,7 +479,7 @@ if (!ditemukan) {
     default:
         break;
     }
-    } while (pilihan2 > 0 && pilihan2 <=3);
+    } while (pilihan2 > 0 || pilihan2 <=3);
     
     
     break;
@@ -517,7 +518,7 @@ if (!ditemukan) {
               default:
                 break;
               }
-      } while (metode > 0 && metode <=5);
+      } while (metode > 0 || metode <6);
       
             
         break;
@@ -545,16 +546,16 @@ if (!ditemukan) {
               case 4: 
               selectionSortNamaDescending();
               case 5 :
-              bubblesortarc;
+              bubblesortarc();
               break;
               case 6: 
-              bubblesortdcs;
+              bubblesortdcs();
               case 7:
               break;
               default:
                 break;
               }
-      } while (sorting > 0 && sorting <=7);
+      } while (sorting > 0 || sorting <=7);
       
          
       break;
@@ -572,7 +573,7 @@ if (!ditemukan) {
         break;
     }
     
-    }  while (pilihan > 0 && pilihan <=5);
+    }  while (pilihan > 0 || pilihan <6);
   
   
     
