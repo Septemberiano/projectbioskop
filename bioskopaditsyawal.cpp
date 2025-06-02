@@ -153,7 +153,7 @@ int pembelian;
 cout<<"masukan jumlah pembelian : ";cin>>pembelian;
     for (int i = 0; i < pembelian; i++)
     {
-        cout<<"Masukan Film (1-4)"; cin>>pelanggan[i].judulfilm ;
+        cout<<"Masukan Film (1-4) :"; cin>>pelanggan[i].judulfilm ;
         if (pelanggan[i].judulfilm == tayanganfilm.no_film[i] )
         {
             tayanganfilm.judul[i];
