@@ -1,15 +1,16 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <limits>
 using namespace std;
 
-
- 
-struct tanggal{
-  int tanggal,bulan,tahun;
+struct tanggal {
+    int tanggal, bulan, tahun;
 };
+
 const int maks = 100;
-struct biodata{
+
+struct biodata {
     string namapelanggan;
     string namafilm;
     int judulfilm;
@@ -20,30 +21,29 @@ struct biodata{
     int nomor_kursi;
 };
 biodata pelanggan[maks];
-int jumlahpelanggan =0;
+int jumlahpelanggan = 0;
 
-struct tayang
-{
-    int no_film[4] = {1,2,3,4};
-     string judul[4] ={"Spiderman No Way Home","Guardian Galaxy","Kimetsu No Yaiba Mugen Train","Jujusu Kaisen Zero"};
-     int harga = 35000;
-}tayanganfilm;
+struct tayang {
+    int no_film[4] = {1, 2, 3, 4};
+    string judul[4] = {"Spiderman No Way Home", "Guardian Galaxy", "Kimetsu No Yaiba Mugen Train", "Jujusu Kaisen Zero"};
+    int harga = 35000;
+} tayanganfilm;
 
 const int baris = 10;
 const int kolom = 4;
-struct studio
-{
+
+struct studio {
     int nokursi;
     char posisikursi;
     bool terpesan;
-};studio korsi[kolom][baris];
+};
+studio korsi[kolom][baris];
 
-
- bool binsec = false;
+bool binsec = false;
 int pilihan;
 
 void simpanDataKeFile() {
-    ofstream file("bioskop.txt", ios::app); 
+    ofstream file("bioskop.txt", ios::app);
     if (!file) {
         cout << "Gagal membuka file!" << endl;
         return;
@@ -56,7 +56,6 @@ void simpanDataKeFile() {
              << pelanggan[i].baris_kursi << " "
              << pelanggan[i].nomor_kursi << endl;
     }
-
     file.close();
     cout << "Data berhasil disimpan ke bioskop.txt!" << endl;
 }
@@ -68,12 +67,10 @@ void bacaDataDariFile() {
         cout << "Gagal membuka file atau file belum ada!" << endl;
         return;
     }
-
     string nama, studio;
     int judul, bayar;
     char baris;
     int nomor;
-
     while (file >> nama >> judul >> studio >> bayar >> baris >> nomor) {
         pelanggan[jumlahpelanggan].namapelanggan = nama;
         pelanggan[jumlahpelanggan].judulfilm = judul;
@@ -83,18 +80,16 @@ void bacaDataDariFile() {
         pelanggan[jumlahpelanggan].nomor_kursi = nomor;
         jumlahpelanggan++;
     }
-
     file.close();
-    
 }
 
 void film() {
-    cout<<"\t======== Daftar Film =========== \t\n";
-    cout<<"\t1. Spiderman No Way Home \t\n";
-    cout<<"\t2. Guardian Galaxy \t\n";
-    cout<<"\t3. Kimetsu No Yaiba Mugen Train \t\n";
-    cout<<"\t4. Jujusu Kaisen Zero \t\n";
-    cout<<"harga tiket : Rp 35.000\t\n";
+    cout << "\t======== Daftar Film =========== \t\n";
+    cout << "\t1. Spiderman No Way Home \t\n";
+    cout << "\t2. Guardian Galaxy \t\n";
+    cout << "\t3. Kimetsu No Yaiba Mugen Train \t\n";
+    cout << "\t4. Jujusu Kaisen Zero \t\n";
+    cout << "harga tiket : Rp 35.000\t\n";
 }
 
 void inisialisasikursi() {
@@ -106,8 +101,6 @@ void inisialisasikursi() {
         }
     }
 }
-
-
 
 void tampilkanKursi() {
     cout << "\nTampilan Kursi Bioskop:\n";
@@ -129,66 +122,80 @@ void kursi(int index) {
     char kolomm;
     int bariss;
     tampilkanKursi();
-    
-    cout << "Input Kolom kursi (A-D)  : "; cin >> kolomm;
-    cout << "Input Baris kursi (1-10) : "; cin >> bariss;
-
+    cout << "Input Kolom kursi (A-D): ";
+    cin >> kolomm;
+    kolomm = toupper(kolomm);
+    cout << "Input Baris kursi (1-10): ";
+    while (!(cin >> bariss) || bariss < 1 || bariss > 10) {
+        cout << "Baris cuma 1-10 bro! Coba lagi: ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
     int kolomke = kolomm - 'A';
     int bariske = bariss - 1;
-
-    if (korsi[kolomke][bariske].terpesan) {
-        cout << "Kursi sudah dipesan, silakan pilih yang lain.\n";
-        return kursi(index);  
+    if (kolomke < 0 || kolomke >= kolom || bariske < 0 || bariske >= baris) {
+        cout << "Kolom cuma A-D, baris 1-10! Coba lagi!\n";
+        cin.clear();
+        cin.ignore(1000, '\n');
+        return kursi(index);
     }
-
+    if (korsi[kolomke][bariske].terpesan) {
+        cout << "Kursi udah dipesen, pilih lain bro!\n";
+        return kursi(index);
+    }
     korsi[kolomke][bariske].terpesan = true;
-
     pelanggan[index].baris_kursi = korsi[kolomke][bariske].posisikursi;
     pelanggan[index].nomor_kursi = korsi[kolomke][bariske].nokursi;
 }
 
-void inputpelanggan(){
-film();
-int pembelian;
-
-cout<<"masukan jumlah pembelian : ";cin>>pembelian;
-    for (int i = 0; i < pembelian; i++)
-    {
-        cout<<"Masukan Film (1-4) :"; cin>>pelanggan[jumlahpelanggan].judulfilm ;
-        if (pelanggan[jumlahpelanggan].judulfilm == tayanganfilm.no_film[i] )
-        {
-            tayanganfilm.judul[i];
-            pelanggan[jumlahpelanggan].pembayaran = pembelian * tayanganfilm.harga;
+void inputpelanggan() {
+    film();
+    int pembelian;
+    cout << "Masukkan jumlah pembelian: ";
+    while (!(cin >> pembelian) || pembelian <= 0 || pembelian > maks - jumlahpelanggan) {
+        cout << "Jumlah gak valid (1-" << maks - jumlahpelanggan << ")! Coba lagi: ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+    }
+    for (int i = 0; i < pembelian; i++) {
+        cout << "Masukkan Film (1-4): ";
+        while (!(cin >> pelanggan[jumlahpelanggan].judulfilm) || pelanggan[jumlahpelanggan].judulfilm < 1 || pelanggan[jumlahpelanggan].judulfilm > 4) {
+            cout << "Film cuma 1-4 bro! Coba lagi: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
         }
-       
-        cout<<"Masukkan Nama pelanggan : ";getline(cin>>ws,pelanggan[jumlahpelanggan].namapelanggan);cout<<endl;
-        cout<<"Pilih Studio : ";cin>>pelanggan[jumlahpelanggan].studio;cout<<endl;
-        kursi(i);  
+        if (pelanggan[jumlahpelanggan].judulfilm >= 1 && pelanggan[jumlahpelanggan].judulfilm <= 4) {
+            pelanggan[jumlahpelanggan].namafilm = tayanganfilm.judul[pelanggan[jumlahpelanggan].judulfilm - 1];
+            pelanggan[jumlahpelanggan].pembayaran = tayanganfilm.harga;
+        }
+        cout << "Masukkan Nama pelanggan: ";
+        getline(cin >> ws, pelanggan[jumlahpelanggan].namapelanggan);
+        cout << "Pilih Studio: ";
+        getline(cin >> ws, pelanggan[jumlahpelanggan].studio);
+        kursi(jumlahpelanggan);
         jumlahpelanggan++;
     }
-   simpanDataKeFile();
+    simpanDataKeFile();
 }
+
 void tampilkanData() {
-     if (jumlahpelanggan == 0) {
+    if (jumlahpelanggan == 0) {
         cout << "\nBelum ada data pelanggan yang tersimpan!\n";
         return;
     }
-
     for (int i = 0; i < jumlahpelanggan; i++) {
         if (pelanggan[i].judulfilm >= 1 && pelanggan[i].judulfilm <= 4) {
             pelanggan[i].namafilm = tayanganfilm.judul[pelanggan[i].judulfilm - 1];
         }
     }
-
     cout << "\n==========================================\n";
-    cout << setw(15) << left << "Nama" 
+    cout << setw(15) << left << "Nama"
          << setw(25) << left << "Film"
          << setw(15) << left << "Studio"
          << setw(10) << left << "Kursi"
          << setw(15) << left << "Pembayaran"
          << endl;
     cout << "==========================================\n";
-
     for (int i = 0; i < jumlahpelanggan; i++) {
         cout << setw(15) << left << pelanggan[i].namapelanggan
              << setw(25) << left << pelanggan[i].namafilm
@@ -196,70 +203,69 @@ void tampilkanData() {
              << pelanggan[i].baris_kursi << pelanggan[i].nomor_kursi << "    "
              << "Rp " << pelanggan[i].pembayaran << endl;
     }
-
     cout << "==========================================\n";
 }
-void bubbleSortNamaAscending() {
-for (int i = 0; i < jumlahpelanggan - 1; i++) {
-for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
-if (pelanggan[j].namapelanggan > pelanggan[j + 1].namapelanggan) {
-swap(pelanggan[j], pelanggan[j + 1]);
-}
-}
-}
-cout << "Data berhasil disorting berdasarkan nama (A-Z).\n";
-simpanDataKeFile();
-}
 
+void bubbleSortNamaAscending() {
+    for (int i = 0; i < jumlahpelanggan - 1; i++) {
+        for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
+            if (pelanggan[j].namapelanggan > pelanggan[j + 1].namapelanggan) {
+                swap(pelanggan[j], pelanggan[j + 1]);
+            }
+        }
+    }
+    cout << "Data berhasil disorting berdasarkan nama (A-Z).\n";
+    simpanDataKeFile();
+}
 
 void bubbleSortNamaDescending() {
-for (int i = 0; i < jumlahpelanggan - 1; i++) {
-for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
-if (pelanggan[j].namapelanggan < pelanggan[j + 1].namapelanggan) {
-swap(pelanggan[j], pelanggan[j + 1]);
+    for (int i = 0; i < jumlahpelanggan - 1; i++) {
+        for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
+            if (pelanggan[j].namapelanggan < pelanggan[j + 1].namapelanggan) {
+                swap(pelanggan[j], pelanggan[j + 1]);
+            }
+        }
+    }
+    cout << "Data berhasil disorting berdasarkan nama (Z-A).\n";
+    binsec = true;
+    simpanDataKeFile();
 }
-}
-}
-cout << "Data berhasil disorting berdasarkan nama (Z-A).\n";
-binsec = true;
-simpanDataKeFile();
-}
+
 void selectionSortNamaAscending() {
-for (int i = 0; i < jumlahpelanggan - 1; i++) {
-int minIndex = i;
-for (int j = i + 1; j < jumlahpelanggan; j++) {
-if (pelanggan[j].namapelanggan < pelanggan[minIndex].namapelanggan) {
-minIndex = j;
-}
-}
-if (minIndex != i) {
-swap(pelanggan[i], pelanggan[minIndex]);
-}
-}
-cout << "Data berhasil disorting berdasarkan nama (A-Z).\n";
-simpanDataKeFile();
+    for (int i = 0; i < jumlahpelanggan - 1; i++) {
+        int minIndex = i;
+        for (int j = i + 1; j < jumlahpelanggan; j++) {
+            if (pelanggan[j].namapelanggan < pelanggan[minIndex].namapelanggan) {
+                minIndex = j;
+            }
+        }
+        if (minIndex != i) {
+            swap(pelanggan[i], pelanggan[minIndex]);
+        }
+    }
+    cout << "Data berhasil disorting berdasarkan nama (A-Z).\n";
+    simpanDataKeFile();
 }
 
 void selectionSortNamaDescending() {
-for (int i = 0; i < jumlahpelanggan - 1; i++) {
-int maxIndex = i;
-for (int j = i + 1; j < jumlahpelanggan; j++) {
-if (pelanggan[j].namapelanggan > pelanggan[maxIndex].namapelanggan) {
-maxIndex = j;
+    for (int i = 0; i < jumlahpelanggan - 1; i++) {
+        int maxIndex = i;
+        for (int j = i + 1; j < jumlahpelanggan; j++) {
+            if (pelanggan[j].namapelanggan > pelanggan[maxIndex].namapelanggan) {
+                maxIndex = j;
+            }
+        }
+        if (maxIndex != i) {
+            swap(pelanggan[i], pelanggan[maxIndex]);
+        }
+    }
+    cout << "Data berhasil disorting berdasarkan nama (Z-A).\n";
+    binsec = true;
+    simpanDataKeFile();
 }
-}
-if (maxIndex != i) {
-swap(pelanggan[i], pelanggan[maxIndex]);
-}
-}
-cout << "Data berhasil disorting berdasarkan nama (Z-A).\n";
-binsec = true;
-simpanDataKeFile();
-}
-void bubblesortarc()
-{
 
- for (int i = 0; i < jumlahpelanggan - 1; i++) {
+void bubblesortarc() {
+    for (int i = 0; i < jumlahpelanggan - 1; i++) {
         for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
             if (
                 pelanggan[j].baris_kursi > pelanggan[j + 1].baris_kursi ||
@@ -269,14 +275,14 @@ void bubblesortarc()
                 swap(pelanggan[j], pelanggan[j + 1]);
             }
         }
-        
-}cout<<"data berhasil di soritng\n";
-binsec = true;
-simpanDataKeFile();
+    }
+    cout << "Data berhasil disortir berdasarkan kursi (ascending).\n";
+    binsec = true;
+    simpanDataKeFile();
 }
-void bubblesortdcs()
-{
- for (int i = 0; i < jumlahpelanggan - 1; i++) {
+
+void bubblesortdcs() {
+    for (int i = 0; i < jumlahpelanggan - 1; i++) {
         for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
             if (
                 pelanggan[j].baris_kursi < pelanggan[j + 1].baris_kursi ||
@@ -285,80 +291,53 @@ void bubblesortdcs()
             ) {
                 swap(pelanggan[j], pelanggan[j + 1]);
             }
-        } 
-}cout<<"data berhasil di soritng\n";
-simpanDataKeFile();
+        }
+    }
+    cout << "Data berhasil disortir berdasarkan kursi (descending).\n";
+    simpanDataKeFile();
 }
+
 void selectionSortAscending() {
     for (int i = 0; i < jumlahpelanggan - 1; i++) {
         for (int j = i + 1; j < jumlahpelanggan; j++) {
             if (
-                pelanggan[i].baris_kursi > pelanggan[j].baris_kursi ||  
-                (pelanggan[i].baris_kursi == pelanggan[j].baris_kursi &&  
-                 pelanggan[i].nomor_kursi > pelanggan[j].nomor_kursi)  
+                pelanggan[i].baris_kursi > pelanggan[j].baris_kursi ||
+                (pelanggan[i].baris_kursi == pelanggan[j].baris_kursi &&
+                 pelanggan[i].nomor_kursi > pelanggan[j].nomor_kursi)
             ) {
                 swap(pelanggan[i], pelanggan[j]);
             }
         }
-    }cout<<"data berhasil di soritng\n";
-simpanDataKeFile();
+    }
+    cout << "Data berhasil disortir berdasarkan kursi (ascending).\n";
+    simpanDataKeFile();
 }
+
 void selectionSortDescending() {
     for (int i = 0; i < jumlahpelanggan - 1; i++) {
         for (int j = i + 1; j < jumlahpelanggan; j++) {
             if (
-                pelanggan[i].baris_kursi < pelanggan[j].baris_kursi ||  
-                (pelanggan[i].baris_kursi == pelanggan[j].baris_kursi &&  
-                 pelanggan[i].nomor_kursi < pelanggan[j].nomor_kursi)  
+                pelanggan[i].baris_kursi < pelanggan[j].baris_kursi ||
+                (pelanggan[i].baris_kursi == pelanggan[j].baris_kursi &&
+                 pelanggan[i].nomor_kursi < pelanggan[j].nomor_kursi)
             ) {
                 swap(pelanggan[i], pelanggan[j]);
             }
         }
-    }cout<<"data berhasil di soritng\n";
+    }
+    cout << "Data berhasil disortir berdasarkan kursi (descending).\n";
     binsec = true;
-simpanDataKeFile();
+    simpanDataKeFile();
 }
-
 
 void sentinelSearchNama() {
     string namaCari;
-    cout << "\nMasukkan nama pelanggan yang ingin dicari: ";
+    cout << "\nMasukkan nama pelanggan yang mau dicari: ";
     getline(cin >> ws, namaCari);
-
-    pelanggan[jumlahpelanggan].namapelanggan = namaCari;
-
-    int i = 0;
-    while (pelanggan[i].namapelanggan != namaCari) {
-        i++;
-    }
-
-    if (i < jumlahpelanggan) {
-        cout << "\n==========================================\n";
-        cout << setw(20) << left << "Data Ditemukan!" << endl;
-        cout << "==========================================\n";
-        cout << setw(15) << left << "Nama" << ": " << pelanggan[i].namapelanggan << endl;
-        cout << setw(15) << left << "Film" << ": " << pelanggan[i].namafilm << endl;
-        cout << setw(15) << left << "Studio" << ": " << pelanggan[i].studio << endl;
-        cout << setw(15) << left << "Kursi" << ": " << pelanggan[i].baris_kursi << pelanggan[i].nomor_kursi << endl;
-        cout << setw(15) << left << "Pembayaran" << ": Rp " << pelanggan[i].pembayaran << endl;
-        cout << "==========================================\n";
-    } else {
-        cout << "\n==========================================\n";
-        cout << setw(20) << left << "Data pelanggan tidak ditemukan!" << endl;
-        cout << "==========================================\n";
-    }
-}
-
-void sequentialSearchNama() {
-    bool ditemukan = false;
-    string namaCari;
-    cout << "\nMasukkan nama pelanggan yang ingin dicari: ";
-    getline(cin >> ws, namaCari);
-
+    bool ketemu = false;
     for (int i = 0; i < jumlahpelanggan; i++) {
         if (pelanggan[i].namapelanggan == namaCari) {
-            ditemukan = true;
-
+            ketemu = true;
             cout << "\n==========================================\n";
             cout << setw(20) << left << "Data Ditemukan!" << endl;
             cout << "==========================================\n";
@@ -371,7 +350,33 @@ void sequentialSearchNama() {
             break;
         }
     }
+    if (!ketemu) {
+        cout << "\n==========================================\n";
+        cout << setw(20) << left << "Data pelanggan gak ketemu!" << endl;
+        cout << "==========================================\n";
+    }
+}
 
+void sequentialSearchNama() {
+    bool ditemukan = false;
+    string namaCari;
+    cout << "\nMasukkan nama pelanggan yang ingin dicari: ";
+    getline(cin >> ws, namaCari);
+    for (int i = 0; i < jumlahpelanggan; i++) {
+        if (pelanggan[i].namapelanggan == namaCari) {
+            ditemukan = true;
+            cout << "\n==========================================\n";
+            cout << setw(20) << left << "Data Ditemukan!" << endl;
+            cout << "==========================================\n";
+            cout << setw(15) << left << "Nama" << ": " << pelanggan[i].namapelanggan << endl;
+            cout << setw(15) << left << "Film" << ": " << pelanggan[i].namafilm << endl;
+            cout << setw(15) << left << "Studio" << ": " << pelanggan[i].studio << endl;
+            cout << setw(15) << left << "Kursi" << ": " << pelanggan[i].baris_kursi << pelanggan[i].nomor_kursi << endl;
+            cout << setw(15) << left << "Pembayaran" << ": Rp " << pelanggan[i].pembayaran << endl;
+            cout << "==========================================\n";
+            break;
+        }
+    }
     if (!ditemukan) {
         cout << "\n==========================================\n";
         cout << setw(20) << left << "Data pelanggan tidak ditemukan!" << endl;
@@ -379,234 +384,201 @@ void sequentialSearchNama() {
     }
 }
 
-
-void binarysearch(){
-
+void binarysearch() {
+    if (!binsec) {
+        cout << "Data harus disortir dulu buat binary search bro!\n";
+        return;
+    }
     string namaDicari;
-    if (binsec == true)
-    {
-        cout << "Masukkan nama pelanggan yang ingin dicari: ";
-cin >> ws;
-getline(cin, namaDicari);
-
-
-for (int i = 0; i < jumlahpelanggan - 1; i++) {
-    for (int j = 0; j < jumlahpelanggan - i - 1; j++) {
-        if (pelanggan[j].namapelanggan > pelanggan[j + 1].namapelanggan) {
-            swap(pelanggan[j], pelanggan[j + 1]);
+    cout << "Masukkan nama pelanggan yang mau dicari: ";
+    getline(cin >> ws, namaDicari);
+    int kiri = 0;
+    int kanan = jumlahpelanggan - 1;
+    bool ketemu = false;
+    while (kiri <= kanan) {
+        int tengah = (kiri + kanan) / 2;
+        if (pelanggan[tengah].namapelanggan == namaDicari) {
+            cout << "\nData Ditemukan:\n";
+            cout << "Nama       : " << pelanggan[tengah].namapelanggan << endl;
+            cout << "Judul Film : " << pelanggan[tengah].namafilm << endl;
+            cout << "Studio     : " << pelanggan[tengah].studio << endl;
+            cout << "Kursi      : " << pelanggan[tengah].baris_kursi << pelanggan[tengah].nomor_kursi << endl;
+            cout << "Pembayaran : Rp " << pelanggan[tengah].pembayaran << endl;
+            ketemu = true;
+            break;
+        } else if (pelanggan[tengah].namapelanggan < namaDicari) {
+            kiri = tengah + 1;
+        } else {
+            kanan = tengah - 1;
         }
     }
-}
-
-int kiri = 0;
-int kanan = jumlahpelanggan - 1;
-bool ditemukan = false;
-
-while (kiri <= kanan) {
-    int tengah = (kiri + kanan) / 2;
-    if (pelanggan[tengah].namapelanggan == namaDicari) {
-        cout << "\nData Ditemukan:\n";
-        cout << "Nama       : " << pelanggan[tengah].namapelanggan << endl;
-        cout << "Judul Film : " << pelanggan[tengah].namafilm << endl;
-        cout << "Studio     : " << pelanggan[tengah].studio << endl;
-        cout << "Kursi      : " << pelanggan[tengah].baris_kursi << pelanggan[tengah].nomor_kursi << endl;
-        cout << "Pembayaran : Rp " << pelanggan[tengah].pembayaran << endl;
-        ditemukan = true;
-        break;
-    } else if (pelanggan[tengah].namapelanggan < namaDicari) {
-        kiri = tengah + 1;
-    } else {
-        kanan = tengah - 1;
+    if (!ketemu) {
+        cout << "\nData pelanggan gak ketemu.\n";
     }
 }
 
-if (!ditemukan) {
-    cout << "\nData pelanggan tidak ditemukan.\n";
+void menuutama() {
+    int pilihan;
+    do {
+        cout << "===Selamat Datang Di Bioskop Sigma===\n";
+        cout << "1. Beli Tiket Film\n";
+        cout << "2. Liat Data Pembelian\n";
+        cout << "3. Cari Data Pembeli\n";
+        cout << "4. Sortir Data Pembeli\n";
+        cout << "5. Keluar\n";
+        cout << "Pilih (1-5): ";
+        while (!(cin >> pilihan) || pilihan < 1 || pilihan > 5) {
+            cout << "Pilih cuma 1-5 bro! Coba lagi: ";
+            cin.clear();
+            cin.ignore(1000, '\n');
+        }
+        switch (pilihan) {
+            case 1:
+                inputpelanggan();
+                break;
+            case 2:
+                bacaDataDariFile();
+                tampilkanData();
+                break;
+            case 3: {
+                int cari;
+                do {
+                    cout << "\n=== Pencarian Data ===\n";
+                    cout << "1. Sequential Non-Sentinel\n";
+                    cout << "2. Sequential Sentinel\n";
+                    cout << "3. Binary Search\n";
+                    cout << "4. Kembali\n";
+                    cout << "Pilih (1-4): ";
+                    while (!(cin >> cari) || cari < 1 || cari > 4) {
+                        cout << "Pilih cuma 1-4 bro! Coba lagi: ";
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                    }
+                    switch (cari) {
+                        case 1:
+                            sequentialSearchNama();
+                            break;
+                        case 2:
+                            sentinelSearchNama();
+                            break;
+                        case 3:
+                            binarysearch();
+                            break;
+                        case 4:
+                            break;
+                    }
+                } while (cari != 4);
+                break;
+            }
+            case 4: {
+                int sort;
+                do {
+                    cout << "\n=== Sorting Data ===\n";
+                    cout << "1. Sortir Kursi\n";
+                    cout << "2. Sortir Nama\n";
+                    cout << "3. Kembali\n";
+                    cout << "Pilih (1-3): ";
+                    while (!(cin >> sort) || sort < 1 || sort > 3) {
+                        cout << "Pilih cuma 1-3 bro! Coba lagi: ";
+                        cin.clear();
+                        cin.ignore(1000, '\n');
+                    }
+                    if (sort == 1) {
+                        int metode;
+                        do {
+                            cout << "\n=== Sorting Kursi ===\n";
+                            cout << "1. Bubble Sort Ascending\n";
+                            cout << "2. Bubble Sort Descending\n";
+                            cout << "3. Selection Sort Ascending\n";
+                            cout << "4. Selection Sort Descending\n";
+                            cout << "5. Kembali\n";
+                            cout << "Pilih (1-5): ";
+                            while (!(cin >> metode) || metode < 1 || metode > 5) {
+                                cout << "Pilih cuma 1-5 bro! Coba lagi: ";
+                                cin.clear();
+                                cin.ignore(1000, '\n');
+                            }
+                            switch (metode) {
+                                case 1:
+                                    bubblesortarc();
+                                    break;
+                                case 2:
+                                    bubblesortdcs();
+                                    break;
+                                case 3:
+                                    selectionSortAscending();
+                                    break;
+                                case 4:
+                                    selectionSortDescending();
+                                    break;
+                                case 5:
+                                    break;
+                            }
+                        } while (metode != 5);
+                    } else if (sort == 2) {
+                        int metode;
+                        do {
+                            cout << "\n=== Sorting Nama ===\n";
+                            cout << "1. Bubble Sort Ascending\n";
+                            cout << "2. Bubble Sort Descending\n";
+                            cout << "3. Selection Sort Ascending\n";
+                            cout << "4. Selection Sort Descending\n";
+                            cout << "5. Kembali\n";
+                            cout << "Pilih (1-5): ";
+                            while (!(cin >> metode) || metode < 1 || metode > 5) {
+                                cout << "Pilih cuma 1-5 bro! Coba lagi: ";
+                                cin.clear();
+                                cin.ignore(1000, '\n');
+                            }
+                            switch (metode) {
+                                case 1:
+                                    bubbleSortNamaAscending();
+                                    break;
+                                case 2:
+                                    bubbleSortNamaDescending();
+                                    break;
+                                case 3:
+                                    selectionSortNamaAscending();
+                                    break;
+                                case 4:
+                                    selectionSortNamaDescending();
+                                    break;
+                                case 5:
+                                    break;
+                            }
+                        } while (metode != 5);
+                    }
+                } while (sort != 3);
+                break;
+            }
+            case 5:
+                cout << "Bye bro, thanks pake Bioskop Sigma!\n";
+                return;
+        }
+    } while (pilihan != 5);
 }
-    }
-  if (binsec == false)
-  {
-    cout<<"sorting biner dulu yah\n\t";
-  }
-  
 
-
-}
-
-
-
-
-
- void menuutama(){
-    int pilihan2;
-    do
-    {
-            cout<<"===Selamat Datang Di Bioskop Sigma===\n";
-    cout<<"1. Pembelian Tiket Film\n";
-    cout<<"2. Data Pembelian Tiket Film\n";
-    cout<<"3. Pencarian Data Pembeli\n";
-    cout<<"4. Sorting Data Pembeli\n";
-    cout<<"5.keluar\n";
-
-    cout<<"masukan pilihan anda :";cin>>pilihan;
-    switch (pilihan)
-    {
-    case 1:
-        inputpelanggan();
-        break;
-    case 2:
-    bacaDataDariFile();
-    tampilkanData();
-        break; 
-    case 3 :do
-    {
-        cout<<"==== Pencarian Data ===\n\t";
-    cout<<"Pilih metodi Pencarian \n\t";
-    cout<<"1. Sequential non sentinel\n\t";
-    cout<<"2. Squiential Sentinel\n\t";
-    cout<<"3. Binary Search\n\t";
-    cout<<"masukan pilihan anda :"; cin>>pilihan2;
-    switch (pilihan2)
-    {
-    case 1:
-        sequentialSearchNama();
-        break;
-    case 2 :
-    sentinelSearchNama();
-    case 3 : binarysearch();
-   
-    break;
-    default:
-        break;
-    }
-    } while (pilihan2 > 0 || pilihan2 == 3);
-    
-    
-    break;
-    case  4: int sorting,metode;
-    do
-    {  
-         cout<<"==Sorting Data==\t\n";
-      cout<<"1.Berdasarkan Kursi \n\t";
-      cout<<"2.berdasarkan nama\n\t";
-      cout<<"3.keluar\t\n";
-      switch (sorting)
-      {
-      case 1 : do
-      {
-          cout<<"====sorting berdasarkan kursi===\n\t";
-              cout<<"1. bubble sort ascending\n\t";
-              cout<<"2. bubble sort descending\n\t";
-              cout<<"3. bubble selection ascending\n\t";
-              cout<<"4. bubble selection descending\n\t";
-              cout<<"5. keluar\n\t";
-              switch (metode)
-              {
-              case 1:
-                bubblesortarc;
-                break;
-              case 2 : 
-              bubblesortdcs;
-              break;
-              case 3 :
-              selectionSortAscending;
-              break;
-              case 4: 
-              selectionSortDescending;
-              case 5 :
-              return;
-              break;
-              default:
-                break;
-              }
-      } while (metode > 0 || metode == 5);
-      
-            
-        break;
-      case 2:do
-      {
-           cout<<"====sorting berdasarkan nama===\n\t";
-              cout<<"1. bubble sort ascending\n\t";
-              cout<<"2. bubble sort descending\n\t";
-              cout<<"3. bubble selection ascending\n\t";
-              cout<<"4. bubble selection descending\n\t";
-              cout<<"5. binery sort ascending\n\t";
-              cout<<"6. binery sort descending\n\t";
-              cout<<"7. keluar\n\t";
-              switch (metode)
-              {
-              case 1:
-                bubbleSortNamaAscending();
-                break;
-              case 2 : 
-              bubbleSortNamaDescending();
-              break;
-              case 3 :
-              selectionSortNamaAscending();
-              break;
-              case 4: 
-              selectionSortNamaDescending();
-              case 5 :
-              bubblesortarc();
-              break;
-              case 6: 
-              bubblesortdcs();
-              case 7:
-              break;
-              default:
-                break;
-              }
-      } while (sorting > 0 || sorting == 7);
-      
-         
-      break;
-      default:
-        break;
-      }
-
-    } while (sorting);
-    
-     
-    break;
-    case 5 :
-    break;
-    default:
-        break;
-    }
-    
-    }  while (pilihan > 0 || pilihan == 5);
-  
-  
-    
- }
- void login(int coba =0) {
+void login(int coba = 0) {
     if (coba > 3) {
         cout << "Terlalu banyak percobaan! Program keluar.\n";
         return;
     }
-
     string user, pass;
-    cout << "Masukan Username: "; cin >> user;
-    cout << "Masukan Password: "; cin >> pass;
-
+    cout << "Masukan Username: ";
+    cin >> user;
+    cout << "Masukan Password: ";
+    cin >> pass;
     if (user == "admin" && pass == "123") {
         cout << "Login berhasil!\n";
         menuutama();
     } else {
         cout << "Login gagal, coba lagi.\n";
-        login(coba + 1); 
+        login(coba + 1);
     }
 }
 
-int main(){
-inisialisasikursi();
-   bacaDataDariFile();
-   login();
-    
-    }
-   
-    
-    
- 
-    
-
+int main() {
+    inisialisasikursi();
+    bacaDataDariFile();
+    login();
+}
