@@ -160,10 +160,9 @@ cout<<"masukan jumlah pembelian : ";cin>>pembelian;
             pelanggan[i].pembayaran = pembelian * tayanganfilm.harga;
         }
        
-        cout<<"Masukkan Nama pelanggan : ";cin>>pelanggan[i].namapelanggan;cout<<endl;
+        cout<<"Masukkan Nama pelanggan : ";getline(cin>>ws,pelanggan[i].namapelanggan);cout<<endl;
         cout<<"Pilih Studio : ";cin>>pelanggan[i].studio;cout<<endl;
         kursi(i);  
-        jumlahpelanggan++;
         jumlahpelanggan++;
     }
    simpanDataKeFile();
@@ -479,7 +478,7 @@ if (!ditemukan) {
     default:
         break;
     }
-    } while (pilihan2 < 0 && pilihan2 <=3);
+    } while (pilihan2 > 0 && pilihan2 <=3);
     
     
     break;
@@ -518,7 +517,7 @@ if (!ditemukan) {
               default:
                 break;
               }
-      } while (metode < 0 && metode <=5);
+      } while (metode > 0 && metode <=5);
       
             
         break;
@@ -535,16 +534,16 @@ if (!ditemukan) {
               switch (metode)
               {
               case 1:
-                bubbleSortNamaAscending;
+                bubbleSortNamaAscending();
                 break;
               case 2 : 
-              bubbleSortNamaDescending;
+              bubbleSortNamaDescending();
               break;
               case 3 :
-              selectionSortNamaAscending;
+              selectionSortNamaAscending();
               break;
               case 4: 
-              selectionSortNamaDescending;
+              selectionSortNamaDescending();
               case 5 :
               bubblesortarc;
               break;
@@ -555,7 +554,7 @@ if (!ditemukan) {
               default:
                 break;
               }
-      } while (sorting < 0 && sorting <=7);
+      } while (sorting > 0 && sorting <=7);
       
          
       break;
@@ -598,6 +597,7 @@ if (!ditemukan) {
 }
 
 int main(){
+inisialisasikursi();
    bacaDataDariFile();
    login();
     
