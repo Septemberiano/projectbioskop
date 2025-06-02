@@ -154,15 +154,15 @@ int pembelian;
 cout<<"masukan jumlah pembelian : ";cin>>pembelian;
     for (int i = 0; i < pembelian; i++)
     {
-        cout<<"Masukan Film (1-4) :"; cin>>pelanggan[i].judulfilm ;
-        if (pelanggan[i].judulfilm == tayanganfilm.no_film[i] )
+        cout<<"Masukan Film (1-4) :"; cin>>pelanggan[jumlahpelanggan].judulfilm ;
+        if (pelanggan[jumlahpelanggan].judulfilm == tayanganfilm.no_film[i] )
         {
             tayanganfilm.judul[i];
-            pelanggan[i].pembayaran = pembelian * tayanganfilm.harga;
+            pelanggan[jumlahpelanggan].pembayaran = pembelian * tayanganfilm.harga;
         }
        
-        cout<<"Masukkan Nama pelanggan : ";getline(cin>>ws,pelanggan[i].namapelanggan);cout<<endl;
-        cout<<"Pilih Studio : ";cin>>pelanggan[i].studio;cout<<endl;
+        cout<<"Masukkan Nama pelanggan : ";getline(cin>>ws,pelanggan[jumlahpelanggan].namapelanggan);cout<<endl;
+        cout<<"Pilih Studio : ";cin>>pelanggan[jumlahpelanggan].studio;cout<<endl;
         kursi(i);  
         jumlahpelanggan++;
     }
@@ -473,13 +473,13 @@ if (!ditemukan) {
         break;
     case 2 :
     sentinelSearchNama();
-    case 3 :
-    binarysearch();
+    case 3 : binarysearch();
+   
     break;
     default:
         break;
     }
-    } while (pilihan2 > 0 || pilihan2 <=3);
+    } while (pilihan2 > 0 || pilihan2 == 3);
     
     
     break;
@@ -514,11 +514,12 @@ if (!ditemukan) {
               case 4: 
               selectionSortDescending;
               case 5 :
+              return;
               break;
               default:
                 break;
               }
-      } while (metode > 0 || metode <6);
+      } while (metode > 0 || metode == 5);
       
             
         break;
@@ -555,7 +556,7 @@ if (!ditemukan) {
               default:
                 break;
               }
-      } while (sorting > 0 || sorting <=7);
+      } while (sorting > 0 || sorting == 7);
       
          
       break;
@@ -573,7 +574,7 @@ if (!ditemukan) {
         break;
     }
     
-    }  while (pilihan > 0 || pilihan <6);
+    }  while (pilihan > 0 || pilihan == 5);
   
   
     
